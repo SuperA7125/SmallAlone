@@ -1,0 +1,135 @@
+using UnityEditor.Tilemaps;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Windows;
+
+public class PlayerInput : MonoBehaviour
+{
+
+    [Header("Inputs")]
+    public InputActionReference Move;
+    public InputActionReference Interact;
+    public InputActionReference Jump;
+
+    [Header("Stats")]
+
+    public float MoveSpeed = 5f;
+    public float JumpForce = 5f;
+
+    [Header("Ground Check")]
+    public LayerMask GroundLayer;
+    public Vector2 BoxSize = new Vector2(0.5f, 0.1f);
+    public float CastDistance = 0.1f;
+
+    //Private stats
+    private float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+    private bool isFacingRight = true;
+    [Header("References")]
+
+    private Rigidbody2D rb;
+    
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+    private void OnEnable()
+    {
+        Move.action.Enable();
+        Interact.action.Enable();
+        Jump.action.Enable();
+
+        Interact.action.performed += OnInteract;
+        Jump.action.started += OnJumpStart;
+        Jump.action.canceled += OnJumpEnd;
+    }
+
+    private void OnDisable()
+    {
+        Interact.action.performed -= OnInteract;
+        Jump.action.started -= OnJumpStart;
+        Jump.action.canceled -= OnJumpEnd;
+
+        Move.action.Disable();
+        Interact.action.Disable();
+        Jump.action.Disable();
+    }
+
+    private void FixedUpdate()
+    {
+        HandleMovement();
+
+        if (GroundCheck())
+        {
+            coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.fixedDeltaTime;
+        }
+    }
+
+
+    private void Flip(float dir)
+    {
+        if (isFacingRight && dir < 0 || !isFacingRight && dir > 0)
+        {
+            isFacingRight = !isFacingRight;
+            Vector3 scale = transform.localScale;
+            scale.x *= -1;
+            transform.localScale = scale;
+        }
+    }
+
+    private bool GroundCheck()
+    {
+        RaycastHit2D hit = Physics2D.BoxCast(transform.position, BoxSize, 0f, Vector2.down, CastDistance, GroundLayer);
+        return hit.collider != null;
+    }
+    #region INPUT HANDLERS
+    private void HandleMovement()
+    {
+        float input = Move.action.ReadValue<Vector2>().x;
+        float targetX = input * MoveSpeed;
+        float newX = Mathf.MoveTowards(rb.linearVelocity.x, targetX, MoveSpeed * Time.fixedDeltaTime);
+        rb.linearVelocity = new Vector2(newX, rb.linearVelocity.y);
+        Flip(input);
+    }
+
+    private void OnInteract(InputAction.CallbackContext context)
+    {
+        // Handle interaction input (e.g., trigger an interaction event)
+        Debug.Log("Interact Input");
+    }
+
+    private void OnJumpStart(InputAction.CallbackContext context)
+    {
+        if (coyoteTimeCounter > 0)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, JumpForce);
+        }
+    }
+
+    private void OnJumpEnd(InputAction.CallbackContext context)
+    {
+        if (rb.linearVelocity.y > 0)
+        { 
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); 
+        }
+
+        coyoteTimeCounter = 0; 
+    }
+
+    #endregion
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = GroundCheck() ? Color.green : Color.red;
+        Gizmos.DrawWireCube(
+            transform.position + Vector3.down * CastDistance,
+            BoxSize
+        );
+    }
+}
