@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Moveable : MonoBehaviour , IMoveable
+public class Moveable : MonoBehaviour , IMoveable , ISaveable
 {
     [Header("Moveable Settings")]
 
@@ -19,7 +19,13 @@ public class Moveable : MonoBehaviour , IMoveable
     private bool isActive = false;
     private bool movingToEnd = true;
 
-
+    [System.Serializable]
+    private struct MoveableState
+    {
+        public Vector3 position;
+        public bool isActive;
+        public bool movingToEnd;
+    }
     private void Awake()
     {
         isActive = false;
@@ -27,7 +33,7 @@ public class Moveable : MonoBehaviour , IMoveable
 
     private void Start()
     {
-        transform.position = StartPos;
+        transform.localPosition = StartPos;
     }
 
     private void Update()
@@ -64,9 +70,9 @@ public class Moveable : MonoBehaviour , IMoveable
     void Move()
     {
         Vector3 target = movingToEnd ? EndPos : StartPos;
-        transform.position = Vector3.MoveTowards(transform.position, target, MoveSpeed * Time.deltaTime);
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, target, MoveSpeed * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, target) <= Tolerance && WaitTime > 0)
+        if (Vector3.Distance(transform.localPosition, target) <= Tolerance && WaitTime > 0)
         {
             waitTimer = WaitTime;
             isWaiting = true;
@@ -76,5 +82,23 @@ public class Moveable : MonoBehaviour , IMoveable
     public void ActivateMovement()
     {
         isActive = true;
+    }
+
+
+    public object CaptureState() => new MoveableState
+    {
+        position = transform.localPosition,
+        isActive = isActive,
+        movingToEnd = movingToEnd
+    };
+
+    public void RestoreState(object state)
+    {
+        var s = (MoveableState)state;
+        transform.localPosition = s.position;
+        isActive = s.isActive;
+        movingToEnd = s.movingToEnd;
+        isWaiting = false;
+        waitTimer = 0f;
     }
 }

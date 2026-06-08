@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 
 [RequireComponent(typeof(PlayerHealth))]
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviour , ISaveable
 {
 
     [Header("Inputs")]
@@ -88,7 +88,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    private bool GroundCheck()
+    public bool GroundCheck()
     {
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, GroundCheckBoxSize, 0f, Vector2.down, CastDistance, GroundLayer);
         return hit.collider != null;
@@ -140,10 +140,17 @@ public class PlayerInput : MonoBehaviour
 
     #endregion
 
+    public object CaptureState() => transform.position;
+
+    public void RestoreState(object state)
+    {
+        transform.position = (Vector3)state;
+        rb.linearVelocity = Vector2.zero;
+    }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = GroundCheck() ? Color.green : Color.red;
+        Gizmos.color = Color.green;
         Gizmos.DrawWireCube(
             transform.position + Vector3.down * CastDistance,
             GroundCheckBoxSize
