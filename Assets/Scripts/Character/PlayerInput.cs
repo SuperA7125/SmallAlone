@@ -1,8 +1,9 @@
-using UnityEditor.Tilemaps;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
+
+[RequireComponent(typeof(PlayerHealth))]
 public class PlayerInput : MonoBehaviour
 {
 
@@ -18,8 +19,13 @@ public class PlayerInput : MonoBehaviour
 
     [Header("Ground Check")]
     public LayerMask GroundLayer;
-    public Vector2 BoxSize = new Vector2(0.5f, 0.1f);
+    public Vector2 GroundCheckBoxSize = new Vector2(0.5f, 0.1f);
     public float CastDistance = 0.1f;
+
+    [Header("Interactables Check")]
+    public LayerMask InteractablesLayer;
+    public Vector2 InteractablesCheckBoxSize = new Vector2(0.5f, 0.5f);
+    public float InteractBoxYOffset = 0.5f;
 
     //Private stats
     private float coyoteTime = 0.2f;
@@ -84,7 +90,7 @@ public class PlayerInput : MonoBehaviour
 
     private bool GroundCheck()
     {
-        RaycastHit2D hit = Physics2D.BoxCast(transform.position, BoxSize, 0f, Vector2.down, CastDistance, GroundLayer);
+        RaycastHit2D hit = Physics2D.BoxCast(transform.position, GroundCheckBoxSize, 0f, Vector2.down, CastDistance, GroundLayer);
         return hit.collider != null;
     }
     #region INPUT HANDLERS
@@ -99,8 +105,19 @@ public class PlayerInput : MonoBehaviour
 
     private void OnInteract(InputAction.CallbackContext context)
     {
-        // Handle interaction input (e.g., trigger an interaction event)
-        Debug.Log("Interact Input");
+        if (coyoteTimeCounter > 0)
+        {
+            Vector3 castPos = new Vector3(transform.position.x, transform.position.y + InteractBoxYOffset, transform.position.z);
+            RaycastHit2D hit = Physics2D.BoxCast(castPos, InteractablesCheckBoxSize, 0f, Vector2.zero, 0f, InteractablesLayer);
+            if (hit.collider != null)
+            {
+                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+                if (interactable != null)
+                {
+                    interactable.Interact();
+                }
+            }
+        }
     }
 
     private void OnJumpStart(InputAction.CallbackContext context)
@@ -129,7 +146,9 @@ public class PlayerInput : MonoBehaviour
         Gizmos.color = GroundCheck() ? Color.green : Color.red;
         Gizmos.DrawWireCube(
             transform.position + Vector3.down * CastDistance,
-            BoxSize
+            GroundCheckBoxSize
         );
+        Vector3 castPos = new Vector3(transform.position.x, transform.position.y + InteractBoxYOffset, transform.position.z);
+        Gizmos.DrawWireCube(castPos, InteractablesCheckBoxSize);
     }
 }
