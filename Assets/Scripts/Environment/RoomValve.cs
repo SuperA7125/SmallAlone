@@ -1,67 +1,21 @@
-using System.Collections;
 using UnityEngine;
 
-
-public class RoomValve : MonoBehaviour , IInteractable , ISaveable
+/// <summary>
+/// Lightweight trigger — no rotation logic lives here. Put one of these on
+/// each valve/lever object. Drag in the (single, shared) RoomRotationController
+/// in the Inspector, and this valve's own position is used as the pivot.
+/// </summary>
+public class RoomValve : MonoBehaviour, IInteractable
 {
-
     [Header("Valve Settings")]
+    [Tooltip("The object whose position acts as the pivot. Usually this valve itself.")]
+    public GameObject Room;
 
-    public float RotationSpeed = 50f;
-
-    private Transform level;
-    private GameObject room;
-    private bool isRotating = false;
-    
-
-
-    private void Start()
-    {
-        level = LevelManager.Instance.LevelRoot;
-        room = transform.parent.gameObject;
-    }
-
-    private void ActivateRoom()
-    {
-        if (isRotating) return;
-
-        
-        StartCoroutine(RotateSequence());
-
-    }
-
-    private IEnumerator RotateSequence()
-    {
-        isRotating = true;
-
-
-        float elapsedTime = 0f;
-        float Duration = 90f / RotationSpeed;
-        Quaternion startRot = level.transform.rotation;
-        Quaternion endRot = startRot * Quaternion.Euler(0, 0, 90);
-
-        while (elapsedTime < Duration)
-        {
-            level.transform.rotation = Quaternion.Slerp(startRot, endRot, elapsedTime / Duration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        level.rotation = endRot;
-
-        isRotating = false;
-
-    }
+    [Tooltip("The single shared controller that actually performs the rotation.")]
+    [SerializeField] private RoomRotationController controller;
 
     public void Interact()
     {
-        ActivateRoom();
-    }
-
-    public object CaptureState() => LevelManager.Instance.LevelRoot.rotation;
-
-    public void RestoreState(object state)
-    {
-        LevelManager.Instance.LevelRoot.rotation = (Quaternion)state;
+        controller.ActivateRotation(Room.transform);
     }
 }
