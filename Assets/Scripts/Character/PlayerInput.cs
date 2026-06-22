@@ -1,6 +1,8 @@
 
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.Rendering.ShadowCascadeGUI;
 
 
 [RequireComponent(typeof(PlayerHealth))]
@@ -46,16 +48,26 @@ public class PlayerInput : MonoBehaviour , ISaveable
         Interact.action.Enable();
         Jump.action.Enable();
 
+        //RoomRotationController.Instance.RotationStarted += StopInput;
+        //RoomRotationController.Instance.RotationEnded += StartInput;
+
         Interact.action.performed += OnInteract;
         Jump.action.started += OnJumpStart;
         Jump.action.canceled += OnJumpEnd;
     }
+
 
     private void OnDisable()
     {
         Interact.action.performed -= OnInteract;
         Jump.action.started -= OnJumpStart;
         Jump.action.canceled -= OnJumpEnd;
+
+        if (RoomRotationController.Instance != null)
+        {
+            //RoomRotationController.Instance.RotationStarted -= StopInput;
+            //RoomRotationController.Instance.RotationEnded -= StartInput;
+        }
 
         Move.action.Disable();
         Interact.action.Disable();
@@ -137,6 +149,18 @@ public class PlayerInput : MonoBehaviour , ISaveable
 
         coyoteTimeCounter = 0; 
     }
+
+
+    private void StartInput()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void StopInput()
+    {
+        throw new NotImplementedException();
+    }
+
 
     #endregion
 

@@ -15,6 +15,8 @@ using UnityEngine;
 /// </summary>
 public class RoomRotationController : MonoBehaviour, ISaveable
 {
+    public static RoomRotationController Instance { get; private set; }
+
     [Header("Rotation Settings")]
     public float RotationSpeed = 50f;
     public float RotationAmount = 90f;
@@ -25,6 +27,17 @@ public class RoomRotationController : MonoBehaviour, ISaveable
     private bool isRotating;
 
     public bool IsRotating => isRotating;
+
+    /// <summary>Fires the instant a rotation begins.</summary>
+    public event System.Action RotationStarted;
+
+    /// <summary>Fires the instant a rotation finishes.</summary>
+    public event System.Action RotationEnded;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -46,6 +59,7 @@ public class RoomRotationController : MonoBehaviour, ISaveable
     {
         isRotating = true;
 
+        RotationStarted?.Invoke();
         // Pull the active room out of LevelRoot's hierarchy so it stays
         // completely still (no movement, no spin) while everything else
         // — every other room still nested under LevelRoot — rotates around it.
@@ -80,6 +94,7 @@ public class RoomRotationController : MonoBehaviour, ISaveable
         pivot.SetParent(pivotOriginalParent, true);
 
         isRotating = false;
+        RotationEnded?.Invoke();    
     }
 
     public object CaptureState() => new LevelTransformState(level.position, level.rotation);

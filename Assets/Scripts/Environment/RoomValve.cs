@@ -16,6 +16,16 @@ public class RoomValve : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        controller.ActivateRotation(Room.transform);
+        RoomRotationController activeController = controller != null
+            ? controller
+            : RoomRotationController.Instance;
+
+        if (activeController == null)
+        {
+            Debug.LogError($"{name}: no RoomRotationController found.", this);
+            return;
+        }
+
+        activeController.ActivateRotation(Room.transform);
     }
 }
