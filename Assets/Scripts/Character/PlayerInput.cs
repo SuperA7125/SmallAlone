@@ -18,6 +18,7 @@ public class PlayerInput : MonoBehaviour , ISaveable
 
     public float MoveSpeed = 5f;
     public float JumpForce = 5f;
+    private bool canMove = true;
 
     [Header("Ground Check")]
     public LayerMask GroundLayer;
@@ -48,8 +49,8 @@ public class PlayerInput : MonoBehaviour , ISaveable
         Interact.action.Enable();
         Jump.action.Enable();
 
-        //RoomRotationController.Instance.RotationStarted += StopInput;
-        //RoomRotationController.Instance.RotationEnded += StartInput;
+        RoomRotationController.Instance.RotationStarted += StopInput;
+        RoomRotationController.Instance.RotationEnded += StartInput;
 
         Interact.action.performed += OnInteract;
         Jump.action.started += OnJumpStart;
@@ -65,8 +66,8 @@ public class PlayerInput : MonoBehaviour , ISaveable
 
         if (RoomRotationController.Instance != null)
         {
-            //RoomRotationController.Instance.RotationStarted -= StopInput;
-            //RoomRotationController.Instance.RotationEnded -= StartInput;
+            RoomRotationController.Instance.RotationStarted -= StopInput;
+            RoomRotationController.Instance.RotationEnded -= StartInput;
         }
 
         Move.action.Disable();
@@ -76,6 +77,7 @@ public class PlayerInput : MonoBehaviour , ISaveable
 
     private void FixedUpdate()
     {
+        if (!canMove) return;
         HandleMovement();
 
         if (GroundCheck())
@@ -134,6 +136,7 @@ public class PlayerInput : MonoBehaviour , ISaveable
 
     private void OnJumpStart(InputAction.CallbackContext context)
     {
+        if (!canMove) return;
         if (coyoteTimeCounter > 0)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, JumpForce);
@@ -151,14 +154,14 @@ public class PlayerInput : MonoBehaviour , ISaveable
     }
 
 
-    private void StartInput()
+    public void StartInput()
     {
-        throw new NotImplementedException();
+        canMove = true;
     }
 
-    private void StopInput()
+    public void StopInput()
     {
-        throw new NotImplementedException();
+        canMove = false;
     }
 
 
