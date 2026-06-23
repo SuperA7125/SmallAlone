@@ -10,9 +10,14 @@ using Unity.Cinemachine;
 /// RequestRevealGroup on this, and this guarantees only one reveal plays
 /// at a time (no overlap).
 /// </summary>
-public class CameraRevealBrain : MonoBehaviour
+public class GlobalCameraBrain : MonoBehaviour
 {
-    public static CameraRevealBrain Instance { get; private set; }
+    public static GlobalCameraBrain Instance { get; private set; }
+
+    [Header("Main Camera")]
+    public CinemachineCamera GameplayCamera;
+
+    public CinemachineCamera ZoomCamera;
 
     [Header("Reveal Camera")]
     [SerializeField] private CinemachineCamera revealCamera;

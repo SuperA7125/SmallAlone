@@ -13,12 +13,15 @@ public class PlayerInput : MonoBehaviour , ISaveable
     public InputActionReference Move;
     public InputActionReference Interact;
     public InputActionReference Jump;
+    public InputActionReference ToggleCameraZoom;
 
     [Header("Stats")]
 
     public float MoveSpeed = 5f;
     public float JumpForce = 5f;
     private bool canMove = true;
+    [SerializeField] private int baseCameraZoom = 3;
+    [SerializeField] private int zoomedOutCameraZoom = 7;
 
     [Header("Ground Check")]
     public LayerMask GroundLayer;
@@ -48,11 +51,14 @@ public class PlayerInput : MonoBehaviour , ISaveable
         Move.action.Enable();
         Interact.action.Enable();
         Jump.action.Enable();
+        ToggleCameraZoom.action.Enable();
 
         RoomRotationController.Instance.RotationStarted += StopInput;
         RoomRotationController.Instance.RotationEnded += StartInput;
 
         Interact.action.performed += OnInteract;
+        ToggleCameraZoom.action.started += ZoomOut;
+        ToggleCameraZoom.action.canceled += ZoomIn;
         Jump.action.started += OnJumpStart;
         Jump.action.canceled += OnJumpEnd;
     }
@@ -61,6 +67,8 @@ public class PlayerInput : MonoBehaviour , ISaveable
     private void OnDisable()
     {
         Interact.action.performed -= OnInteract;
+        ToggleCameraZoom.action.started -= ZoomOut;
+        ToggleCameraZoom.action.canceled -= ZoomIn;
         Jump.action.started -= OnJumpStart;
         Jump.action.canceled -= OnJumpEnd;
 
@@ -73,8 +81,10 @@ public class PlayerInput : MonoBehaviour , ISaveable
         Move.action.Disable();
         Interact.action.Disable();
         Jump.action.Disable();
+        ToggleCameraZoom.action.Disable();
     }
 
+ 
     private void FixedUpdate()
     {
         if (!canMove) return;
@@ -121,6 +131,7 @@ public class PlayerInput : MonoBehaviour , ISaveable
     {
         if (coyoteTimeCounter > 0)
         {
+            Debug.Log("Interacting with object");
             Vector3 castPos = new Vector3(transform.position.x, transform.position.y + InteractBoxYOffset, transform.position.z);
             RaycastHit2D hit = Physics2D.BoxCast(castPos, InteractablesCheckBoxSize, 0f, Vector2.zero, 0f, InteractablesLayer);
             if (hit.collider != null)
@@ -151,6 +162,18 @@ public class PlayerInput : MonoBehaviour , ISaveable
         }
 
         coyoteTimeCounter = 0; 
+    }
+
+
+    private void ZoomOut(InputAction.CallbackContext context)
+    {
+        GlobalCameraBrain.Instance.ZoomCamera.Lens.OrthographicSize = zoomedOutCameraZoom;
+        GlobalCameraBrain.Instance.ZoomCamera.Priority = 18;
+    }
+    private void ZoomIn(InputAction.CallbackContext context)
+    {
+        GlobalCameraBrain.Instance.GameplayCamera.Lens.OrthographicSize = baseCameraZoom;
+        GlobalCameraBrain.Instance.ZoomCamera.Priority = 0;
     }
 
 

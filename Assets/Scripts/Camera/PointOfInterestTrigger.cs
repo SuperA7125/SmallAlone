@@ -4,7 +4,7 @@ using UnityEngine;
 /// Drop this on a trigger collider at the point in the map where a reveal
 /// shot should fire. Holds WHAT to show — either a single point of interest,
 /// or a list of targets for a "zoom out and frame everyone" shot — and asks
-/// CameraRevealBrain to handle the actual camera work.
+/// GlobalCameraBrain to handle the actual camera work.
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class PointOfInterestTrigger : MonoBehaviour, ISaveable
@@ -38,9 +38,9 @@ public class PointOfInterestTrigger : MonoBehaviour, ISaveable
         hasBeenActivated = true;
 
         if (groupTargets != null && groupTargets.Length > 0)
-            CameraRevealBrain.Instance.RequestRevealGroup(groupTargets, revealDuration, player);
+            GlobalCameraBrain.Instance.RequestRevealGroup(groupTargets, revealDuration, player);
         else
-            CameraRevealBrain.Instance.RequestReveal(pointOfInterest, revealDuration, player);
+            GlobalCameraBrain.Instance.RequestReveal(pointOfInterest, revealDuration, player);
         
     }
 
