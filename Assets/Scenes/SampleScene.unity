@@ -2408,7 +2408,7 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 64
-  GroundCheckBoxSize: {x: 0.5, y: 0.1}
+  GroundCheckBoxSize: {x: 0.25, y: 0.1}
   CastDistance: 0.05
   InteractablesLayer:
     serializedVersion: 2
@@ -3227,14 +3227,6 @@ PrefabInstance:
     - target: {fileID: 4973785592186616370, guid: e66a20987b76e814badb2c5327e3dd05, type: 3}
       propertyPath: m_Name
       value: Cameras
-      objectReference: {fileID: 0}
-    - target: {fileID: 5036304237549516422, guid: e66a20987b76e814badb2c5327e3dd05, type: 3}
-      propertyPath: DefaultBlend.Time
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5036304237549516422, guid: e66a20987b76e814badb2c5327e3dd05, type: 3}
-      propertyPath: DefaultBlend.Style
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7481203083498748644, guid: e66a20987b76e814badb2c5327e3dd05, type: 3}
       propertyPath: Target.TrackingTarget

@@ -110,12 +110,15 @@ MonoBehaviour:
   Move: {fileID: -3216442966514980807, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   Interact: {fileID: -6959357951076692586, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   Jump: {fileID: 951100638756690484, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
+  ToggleCameraZoom: {fileID: 5035517560845769830, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   MoveSpeed: 15
   JumpForce: 8.5
+  baseCameraZoom: 3
+  zoomedOutCameraZoom: 5
   GroundLayer:
     serializedVersion: 2
     m_Bits: 64
-  GroundCheckBoxSize: {x: 0.5, y: 0.1}
+  GroundCheckBoxSize: {x: 0.25, y: 0.1}
   CastDistance: 0.05
   InteractablesLayer:
     serializedVersion: 2
