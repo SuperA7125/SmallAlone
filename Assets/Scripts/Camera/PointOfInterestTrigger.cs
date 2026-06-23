@@ -31,7 +31,7 @@ public class PointOfInterestTrigger : MonoBehaviour, ISaveable
         if (hasBeenActivated) return;
         if (!other.CompareTag(playerTag)) return;
 
-        PlayerInput player = other.GetComponent<PlayerInput>();
+        PlayerInputHandler player = other.GetComponent<PlayerInputHandler>();
         if (player == null) return;
         player.StopInput();
 

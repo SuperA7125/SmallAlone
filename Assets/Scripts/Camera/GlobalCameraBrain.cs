@@ -40,7 +40,7 @@ public class GlobalCameraBrain : MonoBehaviour
     }
 
     /// <summary>Look directly at a single point of interest.</summary>
-    public void RequestReveal(Transform pointOfInterest, float duration, PlayerInput player)
+    public void RequestReveal(Transform pointOfInterest, float duration, PlayerInputHandler player)
     {
         if (isRevealing || pointOfInterest == null) return;
         StartCoroutine(RevealSingle(pointOfInterest, duration, player));
@@ -48,13 +48,13 @@ public class GlobalCameraBrain : MonoBehaviour
     }
 
     /// <summary>Zoom out to frame several points at once (e.g. player, next point, obstacles).</summary>
-    public void RequestRevealGroup(IEnumerable<Transform> targets, float duration, PlayerInput player)
+    public void RequestRevealGroup(IEnumerable<Transform> targets, float duration, PlayerInputHandler player)
     {
         if (isRevealing || targets == null) return;
         StartCoroutine(RevealGroup(targets, duration,player));
     }
 
-    private IEnumerator RevealSingle(Transform pointOfInterest, float duration, PlayerInput player)
+    private IEnumerator RevealSingle(Transform pointOfInterest, float duration, PlayerInputHandler player)
     {
         isRevealing = true;
 
@@ -68,7 +68,7 @@ public class GlobalCameraBrain : MonoBehaviour
         player.StartInput();
     }
 
-    private IEnumerator RevealGroup(IEnumerable<Transform> targets, float duration, PlayerInput player)
+    private IEnumerator RevealGroup(IEnumerable<Transform> targets, float duration, PlayerInputHandler player)
     {
         isRevealing = true;
 

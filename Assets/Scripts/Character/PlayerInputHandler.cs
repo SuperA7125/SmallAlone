@@ -6,7 +6,7 @@ using static UnityEditor.Rendering.ShadowCascadeGUI;
 
 
 [RequireComponent(typeof(PlayerHealth))]
-public class PlayerInput : MonoBehaviour , ISaveable
+public class PlayerInputHandler : MonoBehaviour , ISaveable
 {
 
     [Header("Inputs")]
@@ -32,6 +32,8 @@ public class PlayerInput : MonoBehaviour , ISaveable
     public LayerMask InteractablesLayer;
     public Vector2 InteractablesCheckBoxSize = new Vector2(0.5f, 0.5f);
     public float InteractBoxYOffset = 0.5f;
+
+    public bool IsGrounded => coyoteTimeCounter > 0;
 
     //Private stats
     private float coyoteTime = 0.2f;
