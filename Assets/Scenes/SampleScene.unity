@@ -538,7 +538,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3448120935943364757, guid: ca26e42c74812a149a3ccd6de5b584ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -693,10 +693,6 @@ PrefabInstance:
     - target: {fileID: 939844538650476005, guid: d2a819deeb30eca428ba2d6180437169, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 3492708808345209737, guid: d2a819deeb30eca428ba2d6180437169, type: 3}
-      propertyPath: landingMoveLockDuration
-      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 5950754626316905933, guid: d2a819deeb30eca428ba2d6180437169, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2491,7 +2487,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -3448120935943364757, guid: ca26e42c74812a149a3ccd6de5b584ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
