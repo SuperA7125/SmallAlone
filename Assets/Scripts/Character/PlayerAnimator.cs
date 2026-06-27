@@ -1,9 +1,15 @@
 using UnityEngine;
 using System.Collections;
+using System;
+
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerInputHandler))]
+[RequireComponent(typeof(PlayerHealth))]
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private PlayerInputHandler playerInput;
     private Animator animator;
+    private PlayerHealth playerHealth;
 
     [Header("Landing Impact")]
     [Tooltip("Total time movement stays locked after landing (should be >= hit stop duration).")]
@@ -18,10 +24,23 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int JumpUp = Animator.StringToHash("JumpUp");
     private static readonly int JumpDown = Animator.StringToHash("JumpDown");
     private static readonly int Land = Animator.StringToHash("Land");
+    private static readonly int Die = Animator.StringToHash("Death");
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        playerHealth = GetComponent<PlayerHealth>();
+    }
+
+    private void OnEnable()
+    {
+        playerHealth.Died += HandleDeath;
+        playerHealth.Respawned += HandleRespawn;
+    }
+    private void OnDisable()
+    {
+        playerHealth.Died -= HandleDeath;
+        playerHealth.Respawned -= HandleRespawn;
     }
 
     private void Start()
@@ -72,6 +91,16 @@ public class PlayerAnimator : MonoBehaviour
         wasAscending = isAscending;
     }
 
+
+private void HandleDeath()
+    {
+        animator.SetTrigger(Die);
+    }
+
+private void HandleRespawn()
+    {
+        animator.SetTrigger(Idle);
+    }
 
     private IEnumerator LandingImpactSequence()
     {
