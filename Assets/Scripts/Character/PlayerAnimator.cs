@@ -95,11 +95,14 @@ public class PlayerAnimator : MonoBehaviour
 private void HandleDeath()
     {
         animator.SetTrigger(Die);
+        playerInput.EndMovement();
+        playerInput.StopInput();
     }
 
 private void HandleRespawn()
     {
         animator.SetTrigger(Idle);
+        playerInput.StartInput();
     }
 
     private IEnumerator LandingImpactSequence()
