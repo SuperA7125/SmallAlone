@@ -193,6 +193,10 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
         canMove = false;
     }
 
+    public void EndMovement()
+    {
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+    }
 
     #endregion
 

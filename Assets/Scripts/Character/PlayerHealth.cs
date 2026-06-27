@@ -3,13 +3,18 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
+
+    public event Action Died;
+    public event Action Respawned;
+
     public void TakeDamage()
     {
-        RespawnPlayer();
+        Died?.Invoke();
     }
 
-    private void RespawnPlayer()
+    public void RespawnPlayer()
     {
         CheckpointManager.Instance.Respawn();
+        Respawned?.Invoke();
     }
 }
