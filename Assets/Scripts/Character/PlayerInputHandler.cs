@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.Rendering.ShadowCascadeGUI;
+
 
 
 [RequireComponent(typeof(PlayerHealth))]
@@ -33,7 +33,11 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
     public Vector2 InteractablesCheckBoxSize = new Vector2(0.5f, 0.5f);
     public float InteractBoxYOffset = 0.5f;
 
+    [Header("Animation Stats")]
     public bool IsGrounded => coyoteTimeCounter > 0;
+    public bool CanMove => canMove;
+    public float VerticalVelocity => rb.linearVelocity.y;
+    public float HorizontalMoveInput => Move.action.ReadValue<Vector2>().x;
 
     //Private stats
     private float coyoteTime = 0.2f;

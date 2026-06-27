@@ -104,27 +104,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 939844538650476005}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a409b877936d2974faa7d845f8beef3c, type: 3}
+  m_Script: {fileID: 11500000, guid: a6792772d29c7d142ade1bade74a105e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
   Move: {fileID: -3216442966514980807, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   Interact: {fileID: -6959357951076692586, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   Jump: {fileID: 951100638756690484, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   ToggleCameraZoom: {fileID: 5035517560845769830, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
-  MoveSpeed: 15
-  JumpForce: 8.5
+  MoveSpeed: 12
+  JumpForce: 9
   baseCameraZoom: 3
   zoomedOutCameraZoom: 5
   GroundLayer:
     serializedVersion: 2
     m_Bits: 64
-  GroundCheckBoxSize: {x: 0.25, y: 0.1}
-  CastDistance: 0.05
+  GroundCheckBoxSize: {x: 0.2, y: 0.05}
+  CastDistance: 0.02
   InteractablesLayer:
     serializedVersion: 2
     m_Bits: 128
-  InteractablesCheckBoxSize: {x: 0.5, y: 0.5}
-  InteractBoxYOffset: 0.1
+  InteractablesCheckBoxSize: {x: 0.5, y: 0.4}
+  InteractBoxYOffset: 0.2
 --- !u!114 &4667786007125047229
 MonoBehaviour:
   m_ObjectHideFlags: 0
