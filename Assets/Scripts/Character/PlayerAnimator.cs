@@ -1,9 +1,13 @@
 using UnityEngine;
-
+using System.Collections;
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private PlayerInputHandler playerInput;
     private Animator animator;
+
+    [Header("Landing Impact")]
+    [Tooltip("Total time movement stays locked after landing (should be >= hit stop duration).")]
+    [SerializeField] private float landingMoveLockDuration = 0.2f;
 
     // Cached state, updated once per frame
     private bool wasGrounded;
@@ -38,8 +42,11 @@ public class PlayerAnimator : MonoBehaviour
         {
             if (wasGrounded)
             {
-                // Edge: grounded -> airborne, this frame.
-                animator.SetTrigger(JumpUp);
+                // Just left the ground this frame. If we're actually moving
+                // upward, it was a jump -> JumpUp. If not (walked off a ledge,
+                // gravity hasn't built up downward speed yet either), it's
+                // already a fall -> JumpDown.
+                animator.SetTrigger(isAscending ? JumpUp : JumpDown);
             }
             else if (wasAscending && !isAscending)
             {
@@ -51,6 +58,7 @@ public class PlayerAnimator : MonoBehaviour
         {
             // Edge: airborne -> grounded, this frame.
             animator.SetTrigger(Land);
+            StartCoroutine(LandingImpactSequence());
         }
 
         // CanMove gates this so the walk animation doesn't play while input
@@ -62,5 +70,13 @@ public class PlayerAnimator : MonoBehaviour
 
         wasGrounded = isGrounded;
         wasAscending = isAscending;
+    }
+
+
+    private IEnumerator LandingImpactSequence()
+    {
+        playerInput.StopInput();
+        yield return new WaitForSeconds(landingMoveLockDuration);
+        playerInput.StartInput();
     }
 }
