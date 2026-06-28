@@ -7,6 +7,8 @@ public class Button : MonoBehaviour, IInteractable , ISaveable
     [Header("Button Settings")]
 
     private bool isActived = false;
+    [SerializeField] private InteractableAnimator interactableAnimator;
+    [SerializeField] private string playerTag = "Player";
     public List<GameObject> objectsToActivate;
 
     public void Interact()
@@ -19,8 +21,20 @@ public class Button : MonoBehaviour, IInteractable , ISaveable
                 moveable.ActivateMovement();
             }
         }
-
+        interactableAnimator?.PlayActivate();
         isActived = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag(playerTag))
+            interactableAnimator.SetNearPlayer(true);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag(playerTag))
+            interactableAnimator.SetNearPlayer(false);
     }
 
     public object CaptureState() => isActived;

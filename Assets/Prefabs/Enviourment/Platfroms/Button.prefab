@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 2877902508058022505}
   - component: {fileID: 5752300681174814526}
   - component: {fileID: 3716701194599378506}
+  - component: {fileID: 6227595411728461467}
+  - component: {fileID: 691855903680145153}
   m_Layer: 7
   m_Name: Button
   m_TagString: Untagged
@@ -27,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 583431756585352924}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.5, y: -3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -105,6 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52f8e69c8fd7fbd4b968500a5e6fb6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Button
+  interactableAnimator: {fileID: 691855903680145153}
+  playerTag: Player
   objectsToActivate:
   - {fileID: 0}
   - {fileID: 0}
@@ -142,7 +146,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00002503395, y: 0.25045496}
+  m_Offset: {x: 0, y: 0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -152,5 +156,39 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.0000501, y: 0.5010599}
+  m_Size: {x: 1.5, y: 1}
   m_EdgeRadius: 0
+--- !u!95 &6227595411728461467
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583431756585352924}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 82eedbc97e15f354bae23d5abe44b742, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &691855903680145153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583431756585352924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3a7cb67effe374fa623c2cca70f5d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableAnimator
