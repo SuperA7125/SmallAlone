@@ -46,11 +46,13 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
     [Header("References")]
 
     private Rigidbody2D rb;
-    
+    private SpriteRenderer spriteRenderer;
+
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     private void OnEnable()
     {
@@ -68,8 +70,6 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
         Jump.action.started += OnJumpStart;
         Jump.action.canceled += OnJumpEnd;
     }
-
-
     private void OnDisable()
     {
         Interact.action.performed -= OnInteract;
@@ -199,6 +199,12 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
     }
 
     #endregion
+
+    public void SetVisible(bool visible)
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = visible;
+    }
 
     public object CaptureState() => transform.position;
 
