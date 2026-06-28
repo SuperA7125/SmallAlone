@@ -13,6 +13,7 @@ public class RoomValve : MonoBehaviour, IInteractable
 
     [Tooltip("The single shared controller that actually performs the rotation.")]
     [SerializeField] private RoomRotationController controller;
+    [SerializeField] private ValveHeadRotator headRotator;
 
     public void Interact()
     {
@@ -27,5 +28,6 @@ public class RoomValve : MonoBehaviour, IInteractable
         }
 
         activeController.ActivateRotation(Room.transform);
+        headRotator?.PlayRotation();
     }
 }
