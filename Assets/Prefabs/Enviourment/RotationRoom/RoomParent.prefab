@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1862358225158545342}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -55,6 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1930222491884861000}
   - component: {fileID: 1246717665473915251}
+  - component: {fileID: 8668533462513109511}
   m_Layer: 0
   m_Name: ValveHandle
   m_TagString: Untagged
@@ -71,7 +72,7 @@ Transform:
   m_GameObject: {fileID: 2757098673103414157}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.345, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -125,7 +126,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: -2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7639737764701171892, guid: 6bf0ea4b77d404b4ea8eb2797d21e010, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -137,6 +138,21 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &8668533462513109511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2757098673103414157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c99d8c90f7dfd4c4a9fa781ce58e6526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ValveHeadRotator
+  headTransform: {fileID: 1930222491884861000}
+  headRotationAmount: 360
+  controller: {fileID: 0}
 --- !u!1 &5849573364395348374
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +236,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 8644883233944422148, guid: 6bf0ea4b77d404b4ea8eb2797d21e010, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -292,6 +308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomValve
   Room: {fileID: 1862358225158545342}
   controller: {fileID: 0}
+  headRotator: {fileID: 8668533462513109511}
 --- !u!1 &6296180600803499063
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,6 +319,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2338575346192851439}
   - component: {fileID: 5029212836671495751}
+  - component: {fileID: 5012354857996474982}
   m_Layer: 0
   m_Name: ValveSlime
   m_TagString: Untagged
@@ -383,6 +401,28 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!95 &5012354857996474982
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6296180600803499063}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f330963e609bc6045b256e30286d183e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6312619793819200900
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,7 +502,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -6923308754291615788, guid: 6bf0ea4b77d404b4ea8eb2797d21e010, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -525,7 +565,7 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 0
       m_TileSpriteIndex: 2
-      m_TileMatrixIndex: 2
+      m_TileMatrixIndex: 3
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
@@ -545,7 +585,7 @@ Tilemap:
       serializedVersion: 2
       m_TileIndex: 0
       m_TileSpriteIndex: 0
-      m_TileMatrixIndex: 3
+      m_TileMatrixIndex: 2
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
@@ -554,7 +594,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 0
-      m_TileSpriteIndex: 3
+      m_TileSpriteIndex: 4
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -564,7 +604,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 0
-      m_TileSpriteIndex: 3
+      m_TileSpriteIndex: 4
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -591,10 +631,10 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 2
     m_Data: {fileID: 1174106342, guid: 97d630889f7e9484188fda4350562eae, type: 3}
-  - m_RefCount: 2
-    m_Data: {fileID: 2055978343, guid: 97d630889f7e9484188fda4350562eae, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 2
+    m_Data: {fileID: 2055978343, guid: 97d630889f7e9484188fda4350562eae, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 1
     m_Data:
@@ -634,24 +674,6 @@ Tilemap:
       e33: 1
   - m_RefCount: 1
     m_Data:
-      e00: 0.000000059604645
-      e01: 0.99999994
-      e02: 0
-      e03: 0
-      e10: -0.99999994
-      e11: 0.000000059604645
-      e12: -0
-      e13: 0
-      e20: -0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-  - m_RefCount: 1
-    m_Data:
       e00: -1
       e01: -0.00000008742278
       e02: -0
@@ -662,6 +684,24 @@ Tilemap:
       e13: 0
       e20: 0
       e21: -0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+  - m_RefCount: 1
+    m_Data:
+      e00: 0.000000059604645
+      e01: 0.99999994
+      e02: 0
+      e03: 0
+      e10: -0.99999994
+      e11: 0.000000059604645
+      e12: -0
+      e13: 0
+      e20: -0
+      e21: 0
       e22: 1
       e23: 0
       e30: 0

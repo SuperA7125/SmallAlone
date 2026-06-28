@@ -506,6 +506,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Computer-Sheet-export_16
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 822241398bcbced41aa3d496bde880eb
+      internalID: -1717129914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -530,6 +552,7 @@ TextureImporter:
       Computer-Sheet-export_13: 1178242368483978695
       Computer-Sheet-export_14: -3951066361146831753
       Computer-Sheet-export_15: -1315020235
+      Computer-Sheet-export_16: -1717129914
       Computer-Sheet-export_2: -3559001718711964738
       Computer-Sheet-export_3: 4258751053162117562
       Computer-Sheet-export_4: -7066090359563275290
