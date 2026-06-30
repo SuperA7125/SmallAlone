@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InteractableAnimator : MonoBehaviour
 {
-    private Animator animator;
+    public Animator animator;
 
     private static readonly int Activate = Animator.StringToHash("Activate");
     private static readonly int IsNearPlayer = Animator.StringToHash("IsPlayerNear");

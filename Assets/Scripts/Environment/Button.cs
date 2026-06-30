@@ -43,6 +43,8 @@ public class Button : MonoBehaviour, IInteractable , ISaveable
     {
         isActived = (bool)state;
         if (isActived)
-            Interact(); 
+            Interact();
+        else
+            interactableAnimator?.animator.Play("FarFromPlayer");
     }
 }
