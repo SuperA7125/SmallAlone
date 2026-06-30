@@ -14,10 +14,10 @@ public class Moveable : MonoBehaviour , IMoveable , ISaveable
 
     //Private variables
     
-    private float waitTimer = 0f;
-    private bool isWaiting = false;
-    private bool isActive = false;
-    private bool movingToEnd = true;
+    protected float waitTimer = 0f;
+    protected bool isWaiting = false;
+    protected bool isActive = false;
+    protected bool movingToEnd = true;
 
     [System.Serializable]
     private struct MoveableState
@@ -67,7 +67,7 @@ public class Moveable : MonoBehaviour , IMoveable , ISaveable
         if (collision.collider.CompareTag("Player"))
             collision.transform.SetParent(null);
     }
-    void Move()
+    public virtual void Move()
     {
         Vector3 target = movingToEnd ? EndPos : StartPos;
         transform.localPosition = Vector3.MoveTowards(transform.localPosition, target, MoveSpeed * Time.deltaTime);
