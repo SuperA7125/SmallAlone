@@ -15,9 +15,21 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     public InputActionReference ToggleCameraZoom;
 
     [Header("Stats")]
-
-    public float MoveSpeed = 5f;
-    public float JumpForce = 5f;
+    public float MoveSpeed = 8f;
+    public float Acceleration = 20f;
+    [Tooltip("How fast the player decelerates when no input is held. " +
+             "Higher than acceleration for snappier stops.")]
+    public float Deceleration = 30f;
+    public float JumpForce = 10f;
+    [Tooltip("Multiplier applied to gravity when falling, for a less floaty feel.")]
+    public float FallGravityMultiplier = 2.5f;
+    [Tooltip("How much vertical velocity is cut when jump is released early. " +
+             "Lower = more responsive short hops, higher = more committed jumps.")]
+    [Range(0f, 1f)] public float JumpCutMultiplier = 0.5f;
+    [Tooltip("How much horizontal control the player has while airborne (0 = none, 1 = full ground control).")]
+    [Range(0f, 1f)] public float AirControlMultiplier = 0.5f;
+    [Tooltip("Maximum downward velocity — prevents infinite fall speed.")]
+    public float MaxFallSpeed = 20f;
     private bool canMove = true;
     [SerializeField] private int baseCameraZoom = 3;
     [SerializeField] private int zoomedOutCameraZoom = 7;
@@ -95,14 +107,23 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     {
         if (!canMove) return;
         HandleMovement();
+        ApplyFallGravity();
 
         if (GroundCheck())
-        {
             coyoteTimeCounter = coyoteTime;
-        }
         else
-        {
             coyoteTimeCounter -= Time.fixedDeltaTime;
+    }
+
+    private void ApplyFallGravity()
+    {
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (FallGravityMultiplier - 1f) * Time.fixedDeltaTime;
+
+            // Clamp so fall speed doesn't build up infinitely.
+            if (rb.linearVelocity.y < -MaxFallSpeed)
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, -MaxFallSpeed);
         }
     }
 
@@ -128,7 +149,15 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     {
         float input = Move.action.ReadValue<Vector2>().x;
         float targetX = input * MoveSpeed;
-        float newX = Mathf.MoveTowards(rb.linearVelocity.x, targetX, MoveSpeed * Time.fixedDeltaTime);
+
+        bool isGrounded = GroundCheck();
+        float airMultiplier = isGrounded ? 1f : AirControlMultiplier;
+
+        float delta = input != 0
+            ? Acceleration * airMultiplier * Time.fixedDeltaTime
+            : Deceleration * airMultiplier * Time.fixedDeltaTime;
+
+        float newX = Mathf.MoveTowards(rb.linearVelocity.x, targetX, delta);
         rb.linearVelocity = new Vector2(newX, rb.linearVelocity.y);
         Flip(input);
     }
@@ -163,9 +192,7 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     private void OnJumpEnd(InputAction.CallbackContext context)
     {
         if (rb.linearVelocity.y > 0)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
-        }
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * JumpCutMultiplier);
 
         coyoteTimeCounter = 0;
     }

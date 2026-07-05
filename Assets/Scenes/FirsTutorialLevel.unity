@@ -308491,7 +308491,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3736225747591966720, guid: 4698808feb9517d4cb5381e1973602a6, type: 3}
       propertyPath: m_AnimatedTiles.Array.data[0].second.m_AnimationSpeed
-      value: 6.0000005
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3736225747591966720, guid: 4698808feb9517d4cb5381e1973602a6, type: 3}
       propertyPath: m_AnimatedTiles.Array.data[1].second.m_AnimationSpeed
@@ -309662,6 +309662,10 @@ PrefabInstance:
       propertyPath: zoomedOutCameraZoom
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8270068550293040087, guid: d2a819deeb30eca428ba2d6180437169, type: 3}
+      propertyPath: AirControlMultiplier
+      value: 0.25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -310527,6 +310531,10 @@ PrefabInstance:
     - target: {fileID: 3736225747591966720, guid: 4698808feb9517d4cb5381e1973602a6, type: 3}
       propertyPath: m_AnimatedTiles.Array.data[1].second.m_AnimationSpeed
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3736225747591966720, guid: 4698808feb9517d4cb5381e1973602a6, type: 3}
+      propertyPath: m_AnimatedTiles.Array.data[2].second.m_AnimationSpeed
+      value: 6.0000005
       objectReference: {fileID: 0}
     - target: {fileID: 3736225747591966720, guid: 4698808feb9517d4cb5381e1973602a6, type: 3}
       propertyPath: m_AnimatedTiles.Array.data[3].second.m_AnimationSpeed
