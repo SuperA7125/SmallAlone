@@ -1,48 +1,44 @@
 using UnityEngine;
 
-public class Moveable : MonoBehaviour , IMoveable , ISaveable
+[RequireComponent(typeof(Rigidbody2D))]
+public class Moveable : MonoBehaviour, IMoveable, ISaveable
 {
     [Header("Moveable Settings")]
-
     public Vector3 StartPos;
     public Vector3 EndPos;
-
     public float MoveSpeed;
     public float Tolerance = 0.01f;
     public float WaitTime = 2f;
 
-
-    //Private variables
-    
     protected float waitTimer = 0f;
     protected bool isWaiting = false;
     protected bool isActive = false;
     protected bool movingToEnd = true;
 
-    [System.Serializable]
-    private struct MoveableState
+    protected Rigidbody2D rb;
+
+    protected virtual void Awake()
     {
-        public Vector3 position;
-        public bool isActive;
-        public bool movingToEnd;
-    }
-    private void Awake()
-    {
-        isActive = false;
+        rb = GetComponent<Rigidbody2D>();
+
+        // Kinematic: moves via MovePosition (physics-aware, won't fall under
+        // gravity) but still pushes/carries Rigidbody objects correctly —
+        // unlike transform-based movement which bypasses physics entirely.
+        rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
-        transform.localPosition = StartPos;
+        rb.position = transform.TransformPoint(StartPos);
     }
 
-    private void Update()
+    protected virtual void FixedUpdate()
     {
         if (!isActive || isWaiting)
         {
             if (isWaiting)
             {
-                waitTimer -= Time.deltaTime;
+                waitTimer -= Time.fixedDeltaTime;
                 if (waitTimer <= 0)
                 {
                     movingToEnd = !movingToEnd;
@@ -50,29 +46,22 @@ public class Moveable : MonoBehaviour , IMoveable , ISaveable
                     isWaiting = false;
                 }
             }
+            rb.linearVelocity = Vector2.zero;
             return;
         }
-
         Move();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void Move()
     {
-        if (collision.collider.CompareTag("Player"))
-            collision.transform.SetParent(transform);
-    }
+        Vector3 worldTarget = transform.parent != null
+            ? transform.parent.TransformPoint(movingToEnd ? EndPos : StartPos)
+            : (movingToEnd ? EndPos : StartPos);
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Player"))
-            collision.transform.SetParent(null);
-    }
-    public virtual void Move()
-    {
-        Vector3 target = movingToEnd ? EndPos : StartPos;
-        transform.localPosition = Vector3.MoveTowards(transform.localPosition, target, MoveSpeed * Time.deltaTime);
+        Vector2 newPos = Vector2.MoveTowards(rb.position, worldTarget, MoveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(newPos);
 
-        if (Vector3.Distance(transform.localPosition, target) <= Tolerance && WaitTime > 0)
+        if (Vector2.Distance(rb.position, worldTarget) <= Tolerance && WaitTime > 0)
         {
             waitTimer = WaitTime;
             isWaiting = true;
@@ -84,21 +73,32 @@ public class Moveable : MonoBehaviour , IMoveable , ISaveable
         isActive = true;
     }
 
+    [System.Serializable]
+    private struct MoveableState
+    {
+        public Vector3 position;
+        public bool isActive;
+        public bool movingToEnd;
+    }
 
-    public object CaptureState() => new MoveableState
+    public virtual object CaptureState() => new MoveableState
     {
         position = transform.localPosition,
         isActive = isActive,
         movingToEnd = movingToEnd
     };
 
-    public void RestoreState(object state)
+    public virtual void RestoreState(object state)
     {
         var s = (MoveableState)state;
-        transform.localPosition = s.position;
+        rb.position = transform.parent != null
+            ? transform.parent.TransformPoint(s.position)
+            : (Vector3)(Vector2)s.position;
         isActive = s.isActive;
         movingToEnd = s.movingToEnd;
         isWaiting = false;
         waitTimer = 0f;
+        rb.linearVelocity = Vector2.zero;
+        if (!isActive) { transform.position = StartPos; }
     }
 }

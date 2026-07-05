@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8627918742031018351}
   - component: {fileID: 6102084622872811920}
   - component: {fileID: 5487930346249333161}
+  - component: {fileID: 9137365542309328110}
   m_Layer: 6
   m_Name: Platfrom
   m_TagString: Untagged
@@ -327,7 +328,7 @@ CompositeCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
@@ -372,3 +373,22 @@ MonoBehaviour:
   MoveSpeed: 0
   Tolerance: 0
   WaitTime: 2
+--- !u!251 &9137365542309328110
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5478477221101764425}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1

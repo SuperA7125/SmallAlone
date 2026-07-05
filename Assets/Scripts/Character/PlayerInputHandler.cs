@@ -1,4 +1,3 @@
-
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,7 +5,7 @@ using UnityEngine.InputSystem;
 
 
 [RequireComponent(typeof(PlayerHealth))]
-public class PlayerInputHandler : MonoBehaviour , ISaveable
+public class PlayerInputHandler : MonoBehaviour, ISaveable
 {
 
     [Header("Inputs")]
@@ -47,12 +46,13 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+    private bool isZoomedOut = false;
 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
     private void OnEnable()
     {
@@ -90,7 +90,7 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
         ToggleCameraZoom.action.Disable();
     }
 
- 
+
     private void FixedUpdate()
     {
         if (!canMove) return;
@@ -163,21 +163,30 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
     private void OnJumpEnd(InputAction.CallbackContext context)
     {
         if (rb.linearVelocity.y > 0)
-        { 
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); 
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
         }
 
-        coyoteTimeCounter = 0; 
+        coyoteTimeCounter = 0;
     }
 
 
     private void ZoomOut(InputAction.CallbackContext context)
     {
+        isZoomedOut = true;
         GlobalCameraBrain.Instance.ZoomCamera.Lens.OrthographicSize = zoomedOutCameraZoom;
         GlobalCameraBrain.Instance.ZoomCamera.Priority = 18;
     }
     private void ZoomIn(InputAction.CallbackContext context)
     {
+        isZoomedOut = false;
+        GlobalCameraBrain.Instance.GameplayCamera.Lens.OrthographicSize = baseCameraZoom;
+        GlobalCameraBrain.Instance.ZoomCamera.Priority = 0;
+    }
+
+    private void ResetZoom()
+    {
+        isZoomedOut = false;
         GlobalCameraBrain.Instance.GameplayCamera.Lens.OrthographicSize = baseCameraZoom;
         GlobalCameraBrain.Instance.ZoomCamera.Priority = 0;
     }
@@ -198,13 +207,13 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
         rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
     }
 
-    #endregion
-
     public void SetVisible(bool visible)
     {
         if (spriteRenderer != null)
             spriteRenderer.enabled = visible;
     }
+
+    #endregion
 
     public object CaptureState() => transform.position;
 
@@ -212,6 +221,7 @@ public class PlayerInputHandler : MonoBehaviour , ISaveable
     {
         transform.position = (Vector3)state;
         rb.linearVelocity = Vector2.zero;
+        ResetZoom();
     }
 
     private void OnDrawGizmos()

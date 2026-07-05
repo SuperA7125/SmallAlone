@@ -1,38 +1,28 @@
-using System;
 using UnityEngine;
-
 public class ScrollingPlatform : Moveable
 {
-
-
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         isActive = true;
     }
 
-
-    public override void Move()
+    protected override void Move()
     {
-        if (movingToEnd)
-        {
-            Vector3 target = EndPos;
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, target, MoveSpeed * Time.deltaTime);
+        Vector3 worldTarget = transform.parent != null
+            ? transform.parent.TransformPoint(movingToEnd ? EndPos : StartPos)
+            : (movingToEnd ? EndPos : StartPos);
 
-            if (Vector3.Distance(transform.localPosition, target) <= Tolerance)
-            {
-                waitTimer = WaitTime;
-                isWaiting = true;
-            }
-        }
-        else
-        {
-            TeleportToStart();
-        }
-    }
+        Vector2 newPos = Vector2.MoveTowards(rb.position, worldTarget, MoveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(newPos);
 
-    private void TeleportToStart()
-    {
-        transform.localPosition = StartPos;
-        movingToEnd = true;
+        if (Vector2.Distance(rb.position, worldTarget) <= Tolerance)
+        {
+            // Teleport instantly to the opposite end and keep moving —
+            // seamless loop instead of reversing.
+            rb.position = transform.parent != null
+                ? transform.parent.TransformPoint(movingToEnd ? StartPos : EndPos)
+                : (movingToEnd ? StartPos : EndPos);
+        }
     }
 }
