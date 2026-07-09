@@ -189,3 +189,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f3a7cb67effe374fa623c2cca70f5d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractableAnimator
+  interactableType: 2

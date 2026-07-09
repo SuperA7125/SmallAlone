@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a108158bc88d6fb4ebad20923fb62a57, type: 3}
+  m_Name: AudioData
+  m_EditorClassIdentifier: Assembly-CSharp::AudioData
+  MasterVolume: 1
+  SFXVolume: 0.6
+  MusicVolume: 0.5
+  FootstepClips:
+  - {fileID: 8300000, guid: 63f298c967b0ec94eb294214282ea4f4, type: 3}
+  FootstepInterval: 0.5
+  JumpClip: {fileID: 8300000, guid: 63f7aae9795a199468dc168637b9d811, type: 3}
+  LandClip: {fileID: 0}
+  DeathClip: {fileID: 8300000, guid: 0a59c31ca4256a449b46b555aabd6d15, type: 3}
+  InteractClip: {fileID: 0}
+  FootstepPitchVariation: 0.141
+  JumpPitchVariation: 0.1
+  LandPitchVariation: 0.15
+  ButtonActivateClip: {fileID: 8300000, guid: 8cff54052b927c8469cc3875c9e8b7c0, type: 3}
+  ValveActivateClip: {fileID: 0}
+  CheckpointActivateClip: {fileID: 0}
+  CheckpointRespawnClip: {fileID: 0}
+  DoorMoveClip: {fileID: 8300000, guid: 30d9a1d9062385446bac4f87d956fb82, type: 3}
+  PlatformMoveClip: {fileID: 0}
+  GameplayMusic: {fileID: 0}
+  RotationMusic: {fileID: 8300000, guid: 917043a8669e99a42b85b31d6decd5d0, type: 3}
+  CrossfadeDuration: 1

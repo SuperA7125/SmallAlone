@@ -10,6 +10,9 @@ public class Moveable : MonoBehaviour, IMoveable, ISaveable
     public float Tolerance = 0.01f;
     public float WaitTime = 2f;
 
+    public enum MoveableType { Platform, Door }
+    [SerializeField] private MoveableType moveableType = MoveableType.Platform;
+
     protected float waitTimer = 0f;
     protected bool isWaiting = false;
     protected bool isActive = false;
@@ -20,10 +23,6 @@ public class Moveable : MonoBehaviour, IMoveable, ISaveable
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        // Kinematic: moves via MovePosition (physics-aware, won't fall under
-        // gravity) but still pushes/carries Rigidbody objects correctly —
-        // unlike transform-based movement which bypasses physics entirely.
         rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
@@ -71,6 +70,13 @@ public class Moveable : MonoBehaviour, IMoveable, ISaveable
     public void ActivateMovement()
     {
         isActive = true;
+        if (AudioManager.Instance?.Data != null)
+        {
+            AudioClip clip = moveableType == MoveableType.Door
+                ? AudioManager.Instance.Data.DoorMoveClip
+                : AudioManager.Instance.Data.PlatformMoveClip;
+            AudioManager.Instance.PlaySFX(clip);
+        }
     }
 
     [System.Serializable]
@@ -99,6 +105,5 @@ public class Moveable : MonoBehaviour, IMoveable, ISaveable
         isWaiting = false;
         waitTimer = 0f;
         rb.linearVelocity = Vector2.zero;
-        if (!isActive) { transform.position = StartPos; }
     }
 }
