@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AvihooLevel.unity
     guid: d54da35bcedebef46bdeced0d56c31a5
+  - enabled: 1
+    path: Assets/Scenes/Victory.unity
+    guid: 048b71ce6574cc04681f006b654e39a3
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   m_UseUCBPForAssetBundles: 0
