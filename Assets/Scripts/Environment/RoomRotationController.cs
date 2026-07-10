@@ -16,13 +16,13 @@ using UnityEngine;
 /// </summary>
 public class RoomRotationController : MonoBehaviour, ISaveable
 {
-
-    private Transform level;
-    private Transform levelParent;  
-
     [Header("Rotation Settings")]
     public float RotationSpeed = 50f;
     public float RotationAmount = 90f;
+
+
+    private Transform level;
+    private Transform levelParent;
 
     /// <summary>Global access point, e.g. RoomRotationController.Instance.IsRotating</summary>
     public static RoomRotationController Instance { get; private set; }
@@ -97,6 +97,7 @@ public class RoomRotationController : MonoBehaviour, ISaveable
     {
         isRotating = true;
         RotationStarted?.Invoke();
+        AudioManager.Instance?.PlaySFX(AudioManager.Instance.Data?.RoomRotationClip);
 
         // Pull the active room out of LevelRoot's hierarchy so it stays
         // completely still (no movement, no spin) while everything else

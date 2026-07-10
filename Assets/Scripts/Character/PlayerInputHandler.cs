@@ -55,12 +55,14 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     private SpriteRenderer spriteRenderer;
     private bool isZoomedOut = false;
     private PlayerAudioHandler audioHandler;
+    private PlayerParticleHandler particleHandler;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         audioHandler = GetComponent<PlayerAudioHandler>();
+        particleHandler = GetComponent<PlayerParticleHandler>();
     }
 
     private void OnEnable()
@@ -185,6 +187,7 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, JumpForce);
             audioHandler?.OnJump();
+            particleHandler?.OnJump();
         }
     }
 
