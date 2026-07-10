@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4536061368517729396}
   - component: {fileID: 6343928765277945093}
   - component: {fileID: 3492708808345209737}
+  - component: {fileID: 1782215212030893208}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -113,6 +114,7 @@ MonoBehaviour:
   Interact: {fileID: -6959357951076692586, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   Jump: {fileID: 951100638756690484, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   ToggleCameraZoom: {fileID: 5035517560845769830, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
+  ResetLevel: {fileID: -8579276638198084798, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   MoveSpeed: 6
   Acceleration: 30
   Deceleration: 30
@@ -245,3 +247,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   playerInput: {fileID: 8270068550293040087}
   landingMoveLockDuration: 0.05
+--- !u!114 &1782215212030893208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939844538650476005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b5f0a485b257841911149ce8c74959, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAudioHandler
+  footstepVolume: 0.198

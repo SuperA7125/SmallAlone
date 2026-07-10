@@ -364,3 +364,4 @@ MonoBehaviour:
   MoveSpeed: 0
   Tolerance: 0
   WaitTime: 0
+  moveableType: 1

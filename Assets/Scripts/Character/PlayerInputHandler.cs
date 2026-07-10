@@ -1,30 +1,27 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerHealth))]
 public class PlayerInputHandler : MonoBehaviour, ISaveable
 {
-
     [Header("Inputs")]
     public InputActionReference Move;
     public InputActionReference Interact;
     public InputActionReference Jump;
     public InputActionReference ToggleCameraZoom;
+    public InputActionReference ResetLevel;
 
     [Header("Stats")]
     public float MoveSpeed = 8f;
     public float Acceleration = 20f;
-    [Tooltip("How fast the player decelerates when no input is held. " +
-             "Higher than acceleration for snappier stops.")]
+    [Tooltip("How fast the player decelerates when no input is held. Higher than acceleration for snappier stops.")]
     public float Deceleration = 30f;
     public float JumpForce = 10f;
     [Tooltip("Multiplier applied to gravity when falling, for a less floaty feel.")]
     public float FallGravityMultiplier = 2.5f;
-    [Tooltip("How much vertical velocity is cut when jump is released early. " +
-             "Lower = more responsive short hops, higher = more committed jumps.")]
+    [Tooltip("How much vertical velocity is cut when jump is released early.")]
     [Range(0f, 1f)] public float JumpCutMultiplier = 0.5f;
     [Tooltip("How much horizontal control the player has while airborne (0 = none, 1 = full ground control).")]
     [Range(0f, 1f)] public float AirControlMultiplier = 0.5f;
@@ -50,41 +47,45 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     public float VerticalVelocity => rb.linearVelocity.y;
     public float HorizontalMoveInput => Move.action.ReadValue<Vector2>().x;
 
-    //Private stats
     private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
     private bool isFacingRight = true;
-    [Header("References")]
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private bool isZoomedOut = false;
-
+    private PlayerAudioHandler audioHandler;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        audioHandler = GetComponent<PlayerAudioHandler>();
     }
+
     private void OnEnable()
     {
         Move.action.Enable();
         Interact.action.Enable();
         Jump.action.Enable();
         ToggleCameraZoom.action.Enable();
+        ResetLevel.action.Enable();
 
         RoomRotationController.Instance.RotationStarted += StopInput;
         RoomRotationController.Instance.RotationEnded += StartInput;
 
         Interact.action.performed += OnInteract;
+        ResetLevel.action.performed += ResetScene;
         ToggleCameraZoom.action.started += ZoomOut;
         ToggleCameraZoom.action.canceled += ZoomIn;
         Jump.action.started += OnJumpStart;
         Jump.action.canceled += OnJumpEnd;
     }
+
     private void OnDisable()
     {
         Interact.action.performed -= OnInteract;
+        ResetLevel.action.performed -= ResetScene;
         ToggleCameraZoom.action.started -= ZoomOut;
         ToggleCameraZoom.action.canceled -= ZoomIn;
         Jump.action.started -= OnJumpStart;
@@ -101,7 +102,6 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         Jump.action.Disable();
         ToggleCameraZoom.action.Disable();
     }
-
 
     private void FixedUpdate()
     {
@@ -120,13 +120,10 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         if (rb.linearVelocity.y < 0)
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (FallGravityMultiplier - 1f) * Time.fixedDeltaTime;
-
-            // Clamp so fall speed doesn't build up infinitely.
             if (rb.linearVelocity.y < -MaxFallSpeed)
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -MaxFallSpeed);
         }
     }
-
 
     private void Flip(float dir)
     {
@@ -144,6 +141,7 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, GroundCheckBoxSize, 0f, Vector2.down, CastDistance, GroundLayer);
         return hit.collider != null;
     }
+
     #region INPUT HANDLERS
     private void HandleMovement()
     {
@@ -166,7 +164,6 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     {
         if (coyoteTimeCounter > 0)
         {
-            Debug.Log("Interacting with object");
             Vector3 castPos = new Vector3(transform.position.x, transform.position.y + InteractBoxYOffset, transform.position.z);
             RaycastHit2D hit = Physics2D.BoxCast(castPos, InteractablesCheckBoxSize, 0f, Vector2.zero, 0f, InteractablesLayer);
             if (hit.collider != null)
@@ -175,6 +172,7 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
                 if (interactable != null)
                 {
                     interactable.Interact();
+                    audioHandler?.OnInteract();
                 }
             }
         }
@@ -186,6 +184,7 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         if (coyoteTimeCounter > 0)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, JumpForce);
+            audioHandler?.OnJump();
         }
     }
 
@@ -193,10 +192,8 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     {
         if (rb.linearVelocity.y > 0)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * JumpCutMultiplier);
-
         coyoteTimeCounter = 0;
     }
-
 
     private void ZoomOut(InputAction.CallbackContext context)
     {
@@ -204,6 +201,7 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         GlobalCameraBrain.Instance.ZoomCamera.Lens.OrthographicSize = zoomedOutCameraZoom;
         GlobalCameraBrain.Instance.ZoomCamera.Priority = 18;
     }
+
     private void ZoomIn(InputAction.CallbackContext context)
     {
         isZoomedOut = false;
@@ -218,16 +216,13 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         GlobalCameraBrain.Instance.ZoomCamera.Priority = 0;
     }
 
-
-    public void StartInput()
+    private void ResetScene(InputAction.CallbackContext context)
     {
-        canMove = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void StopInput()
-    {
-        canMove = false;
-    }
+    public void StartInput() => canMove = true;
+    public void StopInput() => canMove = false;
 
     public void EndMovement()
     {
@@ -239,7 +234,6 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         if (spriteRenderer != null)
             spriteRenderer.enabled = visible;
     }
-
     #endregion
 
     public object CaptureState() => transform.position;
