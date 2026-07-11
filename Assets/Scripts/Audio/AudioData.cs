@@ -34,6 +34,7 @@ public class AudioData : ScriptableObject
     public AudioClip ValveActivateClip;
     public AudioClip CheckpointActivateClip;
     public AudioClip CheckpointRespawnClip;
+    public AudioClip RoomRotationClip;
 
     [Header("Moveable SFX")]
     public AudioClip DoorMoveClip;
@@ -41,6 +42,5 @@ public class AudioData : ScriptableObject
 
     [Header("Music")]
     public AudioClip GameplayMusic;
-    public AudioClip RotationMusic;
     public float CrossfadeDuration = 1f;
 }
