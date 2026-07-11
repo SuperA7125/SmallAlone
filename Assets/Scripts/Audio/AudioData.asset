@@ -16,21 +16,21 @@ MonoBehaviour:
   SFXVolume: 0.6
   MusicVolume: 0.5
   FootstepClips:
-  - {fileID: 8300000, guid: 63f298c967b0ec94eb294214282ea4f4, type: 3}
+  - {fileID: 8300000, guid: 1059ea4900523e14aaa08d7b14bc363c, type: 3}
   FootstepInterval: 0.5
   JumpClip: {fileID: 8300000, guid: 63f7aae9795a199468dc168637b9d811, type: 3}
-  LandClip: {fileID: 0}
+  LandClip: {fileID: 8300000, guid: 5a246340cdf8e5b489c4b0ce99737c75, type: 3}
   DeathClip: {fileID: 8300000, guid: 0a59c31ca4256a449b46b555aabd6d15, type: 3}
   InteractClip: {fileID: 0}
-  FootstepPitchVariation: 0.141
+  FootstepPitchVariation: 0.014
   JumpPitchVariation: 0.1
   LandPitchVariation: 0.15
-  ButtonActivateClip: {fileID: 8300000, guid: 8cff54052b927c8469cc3875c9e8b7c0, type: 3}
+  ButtonActivateClip: {fileID: 8300000, guid: d63d65f94fcf36248adfba92dbcbcb7d, type: 3}
   ValveActivateClip: {fileID: 0}
-  CheckpointActivateClip: {fileID: 0}
-  CheckpointRespawnClip: {fileID: 0}
+  CheckpointActivateClip: {fileID: 8300000, guid: 605277a38f99d4145b52a4fc25f91a1b, type: 3}
+  CheckpointRespawnClip: {fileID: 8300000, guid: f63d0cb3d30582e47bd53beae7ac3b25, type: 3}
+  RoomRotationClip: {fileID: 8300000, guid: 2a9399b9a1adc574f8c9eeb69f445276, type: 3}
   DoorMoveClip: {fileID: 8300000, guid: 30d9a1d9062385446bac4f87d956fb82, type: 3}
   PlatformMoveClip: {fileID: 0}
-  GameplayMusic: {fileID: 0}
-  RotationMusic: {fileID: 8300000, guid: 917043a8669e99a42b85b31d6decd5d0, type: 3}
+  GameplayMusic: {fileID: 8300000, guid: a42e672a9ce7f4e4d9f1948dc7cb2ecb, type: 3}
   CrossfadeDuration: 1
