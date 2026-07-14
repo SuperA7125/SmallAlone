@@ -13,6 +13,8 @@ public class SceneTransitioner : MonoBehaviour
 {
     public static SceneTransitioner Instance { get; private set; }
 
+    public string FirstLevelName;
+
     [Tooltip("The full-screen black Image used for fading.")]
     [SerializeField] private Image fadeImage;
     [SerializeField] private float fadeDuration = 1f;
@@ -33,6 +35,10 @@ public class SceneTransitioner : MonoBehaviour
         StartCoroutine(Fade(1f, 0f));
     }
 
+    public void LoadFirstLevel()
+    {
+        StartCoroutine(TransitionTo(FirstLevelName));
+    }
     public void LoadScene(string sceneName)
     {
         StartCoroutine(TransitionTo(sceneName));
@@ -67,5 +73,10 @@ public class SceneTransitioner : MonoBehaviour
         Color c = fadeImage.color;
         c.a = alpha;
         fadeImage.color = c;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
