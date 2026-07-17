@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioData
   MasterVolume: 1
   SFXVolume: 0.6
-  MusicVolume: 0.5
+  MusicVolume: 1
   FootstepClips:
   - {fileID: 8300000, guid: 1059ea4900523e14aaa08d7b14bc363c, type: 3}
   FootstepInterval: 0.5
