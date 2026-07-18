@@ -365,3 +365,4 @@ MonoBehaviour:
   Tolerance: 0
   WaitTime: 0
   moveableType: 1
+  resetOnDeath: 1

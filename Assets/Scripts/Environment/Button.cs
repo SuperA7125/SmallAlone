@@ -44,7 +44,18 @@ public class Button : MonoBehaviour, IInteractable, ISaveable
 
     public void RestoreState(object state)
     {
-        isActivated = false;
-        interactableAnimator?.PlayReset();
+        isActivated = (bool)state;
+
+        if (isActivated)
+        {
+            // Restore the visual to the activated state without calling
+            // Interact() — that would re-fire ActivateMovement on connected
+            // objects which have their own RestoreState running separately.
+            interactableAnimator?.PlayActivate();
+        }
+        else
+        {
+            interactableAnimator?.PlayReset();
+        }
     }
 }

@@ -1,31 +1,33 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class CheckpointManager : MonoBehaviour
 {
     public static CheckpointManager Instance { get; private set; }
     private Dictionary<ISaveable, object> savedStates = new Dictionary<ISaveable, object>();
     private InteractableAnimator activeCheckpointAnimator;
     private PlayerInputHandler playerInputHandler;
+    private Vector3 respawnLocalPosition;
+    private bool hasRespawnPosition = false;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
-    public void CaptureCheckpoint(InteractableAnimator checkpointAnimator, Vector3 respawnPosition)
-    {
-        activeCheckpointAnimator = checkpointAnimator;
 
-        savedStates.Clear();
+    private void Start()
+    {
         foreach (ISaveable saveable in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveable>())
         {
             if (saveable is PlayerInputHandler player)
             {
-                // Respawn at the checkpoint's own position, not wherever the
-                // player happened to be standing when they triggered it.
                 playerInputHandler = player;
-                savedStates[saveable] = respawnPosition;
+                Transform levelRoot = LevelManager.Instance.LevelRoot;
+                respawnLocalPosition = levelRoot.InverseTransformPoint(player.transform.position);
+                hasRespawnPosition = true;
+                savedStates[saveable] = player.CaptureState();
             }
             else
             {
@@ -33,23 +35,53 @@ public class CheckpointManager : MonoBehaviour
             }
         }
     }
+
+    public void CaptureCheckpoint(InteractableAnimator checkpointAnimator, Vector3 respawnPosition)
+    {
+        activeCheckpointAnimator = checkpointAnimator;
+
+        Transform levelRoot = LevelManager.Instance.LevelRoot;
+        respawnLocalPosition = levelRoot.InverseTransformPoint(respawnPosition);
+        hasRespawnPosition = true;
+
+        savedStates.Clear();
+        foreach (ISaveable saveable in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveable>())
+        {
+            if (saveable is PlayerInputHandler player)
+            {
+                playerInputHandler = player;
+                savedStates[saveable] = player.CaptureState();
+            }
+            else
+            {
+                savedStates[saveable] = saveable.CaptureState();
+            }
+        }
+    }
+
     public void Respawn()
     {
-        // Hide the player before the teleport happens, so the position jump
-        // is invisible. The checkpoint's own Respawn animation is responsible
-        // for revealing them again via RevealPlayer(), called as an
-        // Animation Event near the end of that clip.
-        playerInputHandler?.StopInput();
         playerInputHandler?.SetVisible(false);
+        playerInputHandler?.StopInput();
 
-        foreach (var kvp in savedStates)
+        // RoomRotationController MUST run first so LevelRoot is already
+        // reset before any Moveable.RestoreState calls GetWorldPosition.
+        // Without this ordering, doors/platforms convert their StartPos
+        // using the pre-reset LevelRoot rotation and end up in the wrong place.
+        foreach (var kvp in savedStates.OrderBy(x => x.Key is RoomRotationController ? 0 : 1))
             kvp.Key.RestoreState(kvp.Value);
+
+        // Apply player position after LevelRoot has been reset.
+        if (hasRespawnPosition && playerInputHandler != null)
+        {
+            Transform levelRoot = LevelManager.Instance.LevelRoot;
+            playerInputHandler.transform.position = levelRoot.TransformPoint(respawnLocalPosition);
+            playerInputHandler.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+        }
 
         activeCheckpointAnimator?.PlayRespawn();
     }
 
-    // Called via Checkpoint.RevealPlayer(), which is itself called as an
-    // Animation Event on the checkpoint's Respawn clip.
     public void RevealPlayer()
     {
         playerInputHandler?.SetVisible(true);

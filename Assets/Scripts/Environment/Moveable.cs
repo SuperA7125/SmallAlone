@@ -13,6 +13,10 @@ public class Moveable : MonoBehaviour, IMoveable, ISaveable
     public enum MoveableType { Platform, Door }
     [SerializeField] private MoveableType moveableType = MoveableType.Platform;
 
+    [Tooltip("If true, always resets to StartPos and deactivates on death regardless " +
+             "of checkpoint state. Use for doors that should close on respawn.")]
+    [SerializeField] private bool resetOnDeath = false;
+
     protected float waitTimer = 0f;
     protected bool isWaiting = false;
     protected bool isActive = false;
@@ -28,7 +32,17 @@ public class Moveable : MonoBehaviour, IMoveable, ISaveable
 
     protected virtual void Start()
     {
-        rb.position = transform.TransformPoint(StartPos);
+        rb.position = GetWorldPosition(StartPos);
+    }
+
+    // Converts a local position (defined relative to LevelRoot) to world
+    // space each time it's called, so it stays correct after LevelRoot rotates.
+    protected Vector2 GetWorldPosition(Vector3 localPos)
+    {
+        Transform levelRoot = LevelManager.Instance.LevelRoot;
+        return levelRoot != null
+            ? (Vector2)levelRoot.TransformPoint(localPos)
+            : (Vector2)localPos;
     }
 
     protected virtual void FixedUpdate()
@@ -53,10 +67,7 @@ public class Moveable : MonoBehaviour, IMoveable, ISaveable
 
     protected virtual void Move()
     {
-        Vector3 worldTarget = transform.parent != null
-            ? transform.parent.TransformPoint(movingToEnd ? EndPos : StartPos)
-            : (movingToEnd ? EndPos : StartPos);
-
+        Vector2 worldTarget = movingToEnd ? GetWorldPosition(EndPos) : GetWorldPosition(StartPos);
         Vector2 newPos = Vector2.MoveTowards(rb.position, worldTarget, MoveSpeed * Time.fixedDeltaTime);
         rb.MovePosition(newPos);
 
@@ -87,21 +98,39 @@ public class Moveable : MonoBehaviour, IMoveable, ISaveable
         public bool movingToEnd;
     }
 
-    public virtual object CaptureState() => new MoveableState
+    public virtual object CaptureState()
     {
-        position = transform.localPosition,
-        isActive = isActive,
-        movingToEnd = movingToEnd
-    };
+        // Store position in LevelRoot local space so it remains valid
+        // after LevelRoot resets its rotation on death.
+        Transform levelRoot = LevelManager.Instance.LevelRoot;
+        Vector3 localPos = levelRoot != null
+            ? levelRoot.InverseTransformPoint(rb.position)
+            : (Vector3)(Vector2)rb.position;
+
+        return new MoveableState
+        {
+            position = localPos,
+            isActive = isActive,
+            movingToEnd = movingToEnd
+        };
+    }
 
     public virtual void RestoreState(object state)
     {
-        var s = (MoveableState)state;
-        rb.position = transform.parent != null
-            ? transform.parent.TransformPoint(s.position)
-            : (Vector3)(Vector2)s.position;
-        isActive = s.isActive;
-        movingToEnd = s.movingToEnd;
+        if (resetOnDeath)
+        {
+            rb.position = GetWorldPosition(StartPos);
+            isActive = false;
+            movingToEnd = true;
+        }
+        else
+        {
+            var s = (MoveableState)state;
+            rb.position = GetWorldPosition(s.position);
+            isActive = s.isActive;
+            movingToEnd = s.movingToEnd;
+        }
+
         isWaiting = false;
         waitTimer = 0f;
         rb.linearVelocity = Vector2.zero;

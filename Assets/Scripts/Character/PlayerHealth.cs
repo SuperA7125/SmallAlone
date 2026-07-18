@@ -6,10 +6,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public event Action Died;
     public event Action Respawned;
+    public bool CanDie;
 
     public void TakeDamage()
     {
-        Died?.Invoke();
+        //if (CanDie)
+        //    //Died?.Invoke();
     }
 
     public void RespawnPlayer()

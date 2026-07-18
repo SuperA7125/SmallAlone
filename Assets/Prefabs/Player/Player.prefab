@@ -115,6 +115,7 @@ MonoBehaviour:
   Jump: {fileID: 951100638756690484, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   ToggleCameraZoom: {fileID: 5035517560845769830, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   ResetLevel: {fileID: -8579276638198084798, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
+  CheatMove: {fileID: -1959174614574489426, guid: 32ebb3326db212647924ea3c58ce905f, type: 3}
   MoveSpeed: 6
   Acceleration: 30
   Deceleration: 30
@@ -125,6 +126,7 @@ MonoBehaviour:
   MaxFallSpeed: 20
   baseCameraZoom: 3
   zoomedOutCameraZoom: 5
+  CheatMoveSpeed: 15
   GroundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -147,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf497bfe7427e44494d3abebc5c08d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  CanDie: 0
 --- !u!50 &2438864581384963989
 Rigidbody2D:
   serializedVersion: 5

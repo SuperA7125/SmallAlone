@@ -12,6 +12,7 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     public InputActionReference Jump;
     public InputActionReference ToggleCameraZoom;
     public InputActionReference ResetLevel;
+    public InputActionReference CheatMove;
 
     [Header("Stats")]
     public float MoveSpeed = 8f;
@@ -30,6 +31,11 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
     private bool canMove = true;
     [SerializeField] private int baseCameraZoom = 3;
     [SerializeField] private int zoomedOutCameraZoom = 7;
+
+    [Header("Cheat Move (Showcase)")]
+    [Tooltip("Movement speed while noclipping via CheatMove.")]
+    public float CheatMoveSpeed = 15f;
+    private bool isCheating = false;
 
     [Header("Ground Check")]
     public LayerMask GroundLayer;
@@ -72,6 +78,7 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         Jump.action.Enable();
         ToggleCameraZoom.action.Enable();
         ResetLevel.action.Enable();
+        CheatMove?.action.Enable();
 
         RoomRotationController.Instance.RotationStarted += StopInput;
         RoomRotationController.Instance.RotationEnded += StartInput;
@@ -103,10 +110,14 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         Interact.action.Disable();
         Jump.action.Disable();
         ToggleCameraZoom.action.Disable();
+        CheatMove?.action.Disable();
     }
 
     private void FixedUpdate()
     {
+        HandleCheatMove();
+        if (isCheating) return; // physics fully bypassed while noclipping
+
         if (!canMove) return;
         HandleMovement();
         ApplyFallGravity();
@@ -160,6 +171,36 @@ public class PlayerInputHandler : MonoBehaviour, ISaveable
         float newX = Mathf.MoveTowards(rb.linearVelocity.x, targetX, delta);
         rb.linearVelocity = new Vector2(newX, rb.linearVelocity.y);
         Flip(input);
+    }
+
+    /// <summary>
+    /// Showcase-only noclip movement. While CheatMove reports non-zero input,
+    /// this disables the Rigidbody2D so the player can pass through walls and
+    /// geometry freely. Releasing the input restores normal physics.
+    /// </summary>
+    private void HandleCheatMove()
+    {
+        if (CheatMove == null) return;
+
+        Vector2 cheatInput = CheatMove.action.ReadValue<Vector2>();
+
+        if (cheatInput.sqrMagnitude > 0.0001f)
+        {
+            if (!isCheating)
+            {
+                isCheating = true;
+                rb.simulated = false; // disables collisions + gravity for this body
+            }
+
+            transform.position += (Vector3)(cheatInput.normalized * CheatMoveSpeed * Time.fixedDeltaTime);
+        }
+        else if (isCheating)
+        {
+            isCheating = false;
+            rb.simulated = true;
+            rb.linearVelocity = Vector2.zero; // avoid inheriting stale velocity on re-entry
+            coyoteTimeCounter = coyoteTime;   // don't immediately fall through a "not grounded" state
+        }
     }
 
     private void OnInteract(InputAction.CallbackContext context)
